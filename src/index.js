@@ -8,18 +8,32 @@ window.onload = function () {
     var peek = document.getElementById('peek');
     var display = document.getElementById('top_of_stack');
 
+    function updateDisplay() {
+        const item = stack.peek();
+        display.innerHTML = item !== undefined ? item : 'n/a';
+    }
+
     pop.addEventListener("click", function() {
-        var text = "Tog bort " + stack.pop();
-        alert(text);
+        const item = stack.pop();
+        if (item !== undefined) {
+            alert("Tog bort " + item);
+        } else {
+            alert("Stacken är tom!");
+        }
+        updateDisplay();
     });
 
     push.addEventListener("click", function() {
         var x = prompt("Vad ska vi lägga på stacken?");
-        stack.push(x);
-        display.innerHTML = x;
+        if (x !== null) {  // Only push if user didn't cancel
+            stack.push(x);
+            updateDisplay();
+        }
     });
 
     peek.addEventListener("click", function() {
-        display.innerHTML = stack.peek();
+        updateDisplay();
     });
+
+    updateDisplay();
 };

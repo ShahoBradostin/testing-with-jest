@@ -4,16 +4,14 @@ require('geckodriver');
 const fileUnderTest = 'file://' + __dirname.replace(/ /g, '%20') + '/../dist/index.html';
 const defaultTimeout = 10000;
 let driver;
-jest.setTimeout(1000 * 60 * 5); // 5 minuter
+jest.setTimeout(1000 * 60 * 5);
 
-// Det här körs innan vi kör testerna för att säkerställa att Firefox är igång
 beforeAll(async () => {
 console.log(fileUnderTest);
     driver = await new Builder().forBrowser('firefox').build();
     await driver.get(fileUnderTest);
 });
 
-// Allra sist avslutar vi Firefox igen
 afterAll(async() => {
     await driver.quit();
 }, defaultTimeout);
@@ -33,24 +31,19 @@ describe('Clicking "Pusha till stacken"', () => {
     });
 });
 
-// Add this to browser.test.js
 test('After pushing "Bananer", peek should show "Bananer"', async () => {
-    // Push an item
     let push = await driver.findElement(By.id('push'));
     await push.click();
     let alert = await driver.switchTo().alert();
     await alert.sendKeys("Bananer");
     await alert.accept();
     
-    // Peek at the stack
     let peek = await driver.findElement(By.id('peek'));
     await peek.click();
     
-    // Verify the output
     let result = await driver.findElement(By.id('top_of_stack')).getText();
     expect(result).toEqual("Bananer");
     
-    // Clear the stack for other tests
     let pop = await driver.findElement(By.id('pop'));
     await pop.click();
 });
